@@ -102,10 +102,8 @@ function adb(command, transportId, callback, error) {
     } else if (stderr) {
       console.log(`adb std error(${stderr})`)
       error(stderr)
-    } else if (stdout) {
-      callback(stdout)
     } else {
-      error('Unknown error has occurred')
+      callback(stdout)
     }
   }))
 }

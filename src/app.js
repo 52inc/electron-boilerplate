@@ -62,14 +62,17 @@ document.querySelector('button.scan-devices').addEventListener('click', event =>
   })
 })
 
+/**
+ * Install the helper + app apk's on to all connected devices
+ */
 document.querySelector('button.install-app').addEventListener('click', event => {
   console.log('Installing application')
   if (deviceIds.length > 0) {
     installLoadingIndicator.style.display = "inline-block";
 
     const installPromises = deviceIds.map(deviceId => {
-      return adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/app-release.apk`)
-        .then(value => adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/installer.apk`))
+      return adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/installer.apk`)
+        .then(value => adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/app-release.apk`))
     })
 
     Promise.all(installPromises)
@@ -92,19 +95,18 @@ document.querySelector('button.install-app').addEventListener('click', event => 
   }
 })
 
-/*
+/**
  * Admin setup
  */
-
 document.querySelector('button.set-admin').addEventListener('click', event => {
   console.log('Setting app as device admin');
   if (deviceIds.length > 0) {
     adminLoadingIndicator.style.display = "inline-block";
 
     const adminPromises = deviceIds.map(deviceId => {
-      return adb.setAsActiveAdmin(deviceId, 'com.scdew.workforce/.internal.admin.AppDeviceAdminReceiver')
+      return adb.setAsActiveAdmin(deviceId, 'com.scdew.installer/.AppDeviceAdminReceiver')
         .then(value => {
-          return adb.setAsDeviceOwner(deviceId, 'com.scdew.workforce/.internal.admin.AppDeviceAdminReceiver')
+          return adb.setAsDeviceOwner(deviceId, 'com.scdew.installer/.AppDeviceAdminReceiver')
             .catch(reason => reason)
         })
     })
@@ -126,6 +128,9 @@ document.querySelector('button.set-admin').addEventListener('click', event => {
   }
 });
 
+/**
+ * Finish button
+ */
 document.querySelector('button.finish-setup').addEventListener('click', event => {
   console.log('Finish setting up app')
   if (deviceIds.length > 0) {
