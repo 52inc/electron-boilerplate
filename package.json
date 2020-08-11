@@ -1,19 +1,23 @@
 {
-  "name": "electron-boilerplate",
-  "productName": "Electron Boilerplate",
-  "description": "Starter for your Electron application",
-  "version": "0.0.0",
+  "name": "scdew-workforce-installer",
+  "productName": "SCDEW Workforce Installer",
+  "description": "Guided installer program for configuring SCDEW tablets",
+  "version": "1.0.0",
   "private": true,
-  "author": "Mr. Gumby <mr.gumby@example.com>",
-  "copyright": "© 2017, Gumby inc.",
+  "author": "Drew Heavner <drew@52inc.com>",
+  "copyright": "© 2020 52inc.",
   "homepage": "http://example.com",
   "main": "app/background.js",
   "build": {
-    "appId": "com.example.electron-boilerplate",
+    "appId": "com.scdew.installer",
     "files": [
       "app/**/*",
       "node_modules/**/*",
       "package.json"
+    ],
+    "extraFiles": [
+      "resources/adb/**/*",
+      "resources/apk/**/*"
     ],
     "directories": {
       "buildResources": "resources"

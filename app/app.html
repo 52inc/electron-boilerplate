@@ -3,23 +3,68 @@
 <head>
   <meta charset="utf-8">
   <title>Electron Boilerplate</title>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 <body>
 
   <div id="app" class="container" style="display: none;">
-    <h1 id="greet"></h1>
-    <p>
-      Welcome to <a href="https://www.electronjs.org/" class="js-external-link">Electron</a> app running on this <strong id="os"></strong> machine.
-    </p>
-    <p>
-      App author: <strong id="author"></strong>
-    </p>
-    <p>
-      Environment: <strong id="env"></strong>
-    </p>
-    <p>
-      Electron version: <strong id="electron-version"></strong>
-    </p>
+    <header>
+      <h1>Workforce Installer</h1>
+      <p>
+        Follow the guide below to install the SC Dew Workforce application onto a device.
+      </p>
+    </header>
+    <section class="main">
+      <div class="step step0">
+        <h5>Make sure the device is plugged into the computer and you accept the prompt for usb debugging on the device. Once done, click the action below.</h5>
+        <br/>
+        <button type="button" class="btn btn-primary scan-devices">Scan for device</button>
+        <div class="device-label"></div>
+      </div>
+      <div class="step step1" style="display: none;">
+        <hr/>
+        <h5>Install the Workforce application on all Devices</h5>
+        <p>Click the button below to install the workforce application on all of the connected devices listed above</p>
+        <br/>
+        <span>
+          <button type="button" class="btn btn-primary install-app">Install Workforce App</button>
+          <div style="display: none;" class="spinner-border spinner-border-sm ml-2 install-loading" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div class="install-label"></div>
+        </span>
+      </div>
+      <div class="step step2" style="display: none;">
+        <hr/>
+        <h5>Configure application as a Device Admin</h5>
+        <p>Click the button below to configure the application as an admin so it can lock down on the device</p>
+        <br/>
+        <span>
+          <button type="button" class="btn btn-primary set-admin">Configure Workforce App as an Administrator</button>
+          <div style="display: none;" class="spinner-border spinner-border-sm ml-2 admin-loading" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div class="admin-label"></div>
+        </span>
+      </div>
+      <div class="step step3" style="display: none;">
+        <hr/>
+        <h5>Finish Setup</h5>
+        <p>Click the button below to set the app as the default home app, launch it, and disable usb settings.</p>
+        <br/>
+        <span>
+          <button type="button" class="btn btn-primary finish-setup">Finish Setup</button>
+          <div style="display: none;" class="spinner-border spinner-border-sm ml-2 finish-loading" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div class="finish-label"></div>
+        </span>
+      </div>
+    </section>
+    <footer></footer>
   </div>
 
   <script src="app.js"></script>
