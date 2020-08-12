@@ -27,10 +27,13 @@
       <div class="step step1" style="display: none;">
         <hr/>
         <h5>Install the Workforce application on all Devices</h5>
-        <p>Click the button below to install the workforce application on all of the connected devices listed above</p>
+        <p>
+          Click the button below to install the workforce application on all of the connected devices listed above.
+          Then it will automatically configure the app as the device admin so it can properly lock down.
+        </p>
         <br/>
         <span>
-          <button type="button" class="btn btn-primary install-app">Install Workforce App</button>
+          <button type="button" class="btn btn-primary install-app">Install & Setup Workforce App</button>
           <div style="display: none;" class="spinner-border spinner-border-sm ml-2 install-loading" role="status">
             <span class="sr-only">Loading...</span>
           </div>
@@ -38,19 +41,6 @@
         </span>
       </div>
       <div class="step step2" style="display: none;">
-        <hr/>
-        <h5>Configure application as a Device Admin</h5>
-        <p>Click the button below to configure the application as an admin so it can lock down on the device</p>
-        <br/>
-        <span>
-          <button type="button" class="btn btn-primary set-admin">Configure Workforce App as an Administrator</button>
-          <div style="display: none;" class="spinner-border spinner-border-sm ml-2 admin-loading" role="status">
-            <span class="sr-only">Loading...</span>
-          </div>
-          <div class="admin-label"></div>
-        </span>
-      </div>
-      <div class="step step3" style="display: none;">
         <hr/>
         <h5>Finish Setup</h5>
         <p>Click the button below to set the app as the default home app, launch it, and disable usb settings.</p>
@@ -64,7 +54,9 @@
         </span>
       </div>
     </section>
-    <footer></footer>
+    <footer>
+      <button type="button" class="btn btn-secondary reset" style="display: none;">Reset</button>
+    </footer>
   </div>
 
   <script src="app.js"></script>

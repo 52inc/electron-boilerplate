@@ -13,25 +13,19 @@ import jetpack from "fs-jetpack";
 
 import * as adb from "./adb"
 
-import {exec} from "child_process";
-
 const app = remote.app;
 const appDir = jetpack.cwd(app.getAppPath());
 
 const devicesLabel = document.querySelector('.device-label');
 const installLabel = document.querySelector('.install-label');
-const adminLabel = document.querySelector('.admin-label');
 const finishLabel = document.querySelector('.finish-label');
 
 const installLoadingIndicator = document.querySelector('.install-loading')
-const adminLoadingIndicator = document.querySelector('.admin-loading')
 const finishLoadingIndicator = document.querySelector('.finish-loading')
 
 let currentStep = 0;
-let deviceId;
 let deviceIds = [];
 let appInstalled = false;
-let appIsAdmin = false;
 
 document.querySelector("#app").style.display = "block";
 document.querySelector('button.scan-devices').addEventListener('click', event => {
@@ -71,8 +65,11 @@ document.querySelector('button.install-app').addEventListener('click', event => 
     installLoadingIndicator.style.display = "inline-block";
 
     const installPromises = deviceIds.map(deviceId => {
-      return adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/installer.apk`)
-        .then(value => adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/app-release.apk`))
+      return adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/installer-release.apk`)
+        .then(_ => adb.installApk(deviceId, `${app.getAppPath().replace(/(\s+)/g, '\\$1')}/resources/apks/app-release.apk`))
+        .then(_ => adb.setAsActiveAdmin(deviceId, 'com.scdew.installer/.AppDeviceAdminReceiver'))
+        .then(_ => adb.setAsDeviceOwner(deviceId, 'com.scdew.installer/.AppDeviceAdminReceiver'))
+        .then(_ => adb.startWorkforceApp(deviceId))
     })
 
     Promise.all(installPromises)
@@ -80,7 +77,7 @@ document.querySelector('button.install-app').addEventListener('click', event => 
         const success = results.filter(value => value).length;
         console.log(`APKs installed on ${success} of ${results.length} devices`);
         installLabel.style.color = 'green'
-        installLabel.innerHTML = `APK installed on ${success} of ${results.length} devices`;
+        installLabel.innerHTML = `APK installed on ${success} of ${results.length} devices\nWorkforce app configured as admin`;
 
         appInstalled = true;
         updateSteps()
@@ -96,39 +93,6 @@ document.querySelector('button.install-app').addEventListener('click', event => 
 })
 
 /**
- * Admin setup
- */
-document.querySelector('button.set-admin').addEventListener('click', event => {
-  console.log('Setting app as device admin');
-  if (deviceIds.length > 0) {
-    adminLoadingIndicator.style.display = "inline-block";
-
-    const adminPromises = deviceIds.map(deviceId => {
-      return adb.setAsActiveAdmin(deviceId, 'com.scdew.installer/.AppDeviceAdminReceiver')
-        .then(value => {
-          return adb.setAsDeviceOwner(deviceId, 'com.scdew.installer/.AppDeviceAdminReceiver')
-            .catch(reason => reason)
-        })
-    })
-
-    Promise.all(adminPromises)
-      .then(results => {
-        adminLabel.style.color = 'green';
-        adminLabel.innerHTML = `App set as a device admin`
-        appIsAdmin = true;
-        updateSteps()
-      })
-      .catch(err => {
-        adminLabel.style.color = 'indianred';
-        adminLabel.innerHTML = `Admin Setup Failed: \n${err}`
-      })
-      .finally(() => {
-        adminLoadingIndicator.style.display = "none";
-      })
-  }
-});
-
-/**
  * Finish button
  */
 document.querySelector('button.finish-setup').addEventListener('click', event => {
@@ -137,8 +101,7 @@ document.querySelector('button.finish-setup').addEventListener('click', event =>
     finishLoadingIndicator.style.display = "block";
 
     const finishPromises = deviceIds.map(deviceId => {
-      return adb.startWorkforceApp(deviceId)
-        .then(value => adb.disableUsbDebugging(deviceId))
+      return adb.disableUsbDebugging(deviceId)
     })
 
     Promise.all(finishPromises)
@@ -156,13 +119,19 @@ document.querySelector('button.finish-setup').addEventListener('click', event =>
   }
 })
 
+document.querySelector('button.reset').addEventListener('click', event => {
+  console.log('Reset Clicked!')
+  deviceIds = [];
+  appInstalled = false;
+  updateSteps()
+})
+
 // noinspection DuplicatedCode
 function updateSteps() {
   if (deviceIds.length > 0) currentStep = 1;
   if (appInstalled) currentStep = 2;
-  if (appIsAdmin) currentStep = 3;
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     if (i <= currentStep) {
       document.querySelector(`div.step${i}`).style.display = "block";
     } else {

@@ -68,3 +68,8 @@ div.step h5{
 .centering {
   align: center;
 }
+
+.reset {
+  margin-top: 100px;
+  float: right;
+}
